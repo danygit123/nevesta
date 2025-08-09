@@ -1,105 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marauderova mapa – Svatební stopa</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tři GIFy – hezky pod sebou</title>
   <style>
+    :root { --ratio: 177.78%; } /* 9:16 = 16/9 * 100 = 177.78% */
+    * { box-sizing: border-box; }
     body {
-      background: #000;
-      color: #fff;
-      font-family: monospace;
       margin: 0;
-      overflow: hidden;
+      background: #0b0b0b;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-
-    .map-container {
+    main.stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+      max-width: 600px; /* drží rozumnou šířku na velkých monitorech pro vertikální formát */
+      margin: 0 auto;
+    }
+    .frame {
       position: relative;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    .map-bg {
-      position: absolute;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.15;
-    }
-
-    .clue {
-      position: absolute;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
       cursor: pointer;
-      transition: transform 0.3s;
     }
-
-    .clue.hidden {
-      display: none;
+    .frame::before { 
+      content: "";
+      display: block;
+      padding-top: var(--ratio);
     }
-
-    .compass {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 100px;
-      height: 100px;
+    .frame > img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; /* vyplní 9:16 rámeček pěkně bez deformace */
+      display: block;
     }
-
-    .audio-control {
-      display: none;
+    @media (min-width: 900px) {
+      main.stack { gap: 24px; padding: 24px; }
+      .frame { border-radius: 20px; }
     }
   </style>
 </head>
 <body>
-  <div class="map-container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/BlankMap-World-Black.svg/1920px-BlankMap-World-Black.svg.png" class="map-bg" alt="Mapa">
-
-    <!-- Stopa 1 -->
-    <div id="clue1" class="clue" style="top: 20%; left: 30%;" onclick="revealClue(2)">
-      <img src="https://media.giphy.com/media/j5hPQJaBvGsXu5iDZm/giphy.gif" width="80" alt="Stopa 1">
-      <audio id="audio1" class="audio-control" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  <audio id="bg-audio" src="hudba.mp3"></audio>
+  <main class="stack">
+    <div class="frame" onclick="playAudio()">
+      <img src="jedna.gif" alt="První GIF" loading="eager" />
     </div>
-
-    <!-- Stopa 2 -->
-    <div id="clue2" class="clue hidden" style="top: 45%; left: 50%;" onclick="revealClue(3)">
-      <img src="https://media.giphy.com/media/SUenM4zsOi7rjW7MJo/giphy.gif" width="80" alt="Stopa 2">
-      <audio id="audio2" class="audio-control" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+    <div class="frame" onclick="playAudio()">
+      <img src="druhy snimek.gif" alt="Druhý snímek – GIF" loading="lazy" />
     </div>
-
-    <!-- Stopa 3 (poslední) -->
-    <div id="clue3" class="clue hidden" style="top: 70%; left: 65%;" onclick="revealClue(4)">
-      <img src="https://media.giphy.com/media/XxYkO3loZ3R68cazXz/giphy.gif" width="80" alt="Stopa 3">
-      <audio id="audio3" class="audio-control" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"></audio>
+    <div class="frame" onclick="playAudio()">
+      <img src="mapatres.gif" alt="Třetí GIF (mapa tři)" loading="lazy" />
     </div>
-
-    <!-- Kompas -->
-    <div class="compass">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Compass_Rose_English_North.svg" id="compass" alt="Kompas" style="width: 100%; height: auto;">
-    </div>
-  </div>
-
+  </main>
   <script>
-    function revealClue(nextClueNumber) {
-      const currentAudio = document.querySelector(`#audio${nextClueNumber - 1}`);
-      if (currentAudio) currentAudio.play();
-
-      const nextClue = document.querySelector(`#clue${nextClueNumber}`);
-      if (nextClue) nextClue.classList.remove("hidden");
-
-      if (nextClueNumber === 4) stopCompass();
-    }
-
-    // Kompasová animace
-    let angle = 0;
-    const compassInterval = setInterval(() => {
-      const compass = document.getElementById("compass");
-      compass.style.transform = `rotate(${angle}deg)`;
-      angle += 2;
-    }, 50);
-
-    function stopCompass() {
-      clearInterval(compassInterval);
-      document.getElementById("compass").style.transform = "rotate(90deg)";
+    function playAudio() {
+      const audio = document.getElementById('bg-audio');
+      audio.play();
     }
   </script>
 </body>
